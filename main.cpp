@@ -37,6 +37,15 @@ int main(int argc, char* args[]) {
 	// Init imgui
 	window.setupImGui();
 
+	// Todo: test grid
+	const int GRID_WIDTH = 10;
+	const int GRID_HEIGHT = 10;
+	int cameraX = 0;
+	int cameraY = 0;
+	int ZOOM_LEVEL = 1;
+	int currentActiveMW = 1; // 1(zoom), 2(cameraX), 3(cameraY)
+	int grid[GRID_WIDTH][GRID_HEIGHT];
+
 
 
 	bool gameRunning = true;
@@ -61,6 +70,44 @@ int main(int argc, char* args[]) {
 			while (SDL_PollEvent(&event)) {
 				if (event.type == SDL_QUIT)
 					gameRunning = false;
+				else if (event.type == SDL_MOUSEWHEEL) {
+					if (event.wheel.y > 0) {
+						if (currentActiveMW == 1) {
+							ZOOM_LEVEL += 1;
+						}
+						else if (currentActiveMW == 2) {
+							cameraX += 1;
+						}
+						else if (currentActiveMW == 3) {
+							cameraY += 1;
+						}
+					}
+					else {
+						if (currentActiveMW == 1) {
+							ZOOM_LEVEL -= 1;
+							if (ZOOM_LEVEL <= 0)
+								ZOOM_LEVEL = 1;
+						}
+						else if (currentActiveMW == 2) {
+							cameraX -= 1;
+						}
+						else if (currentActiveMW == 3) {
+							cameraY -= 1;
+						}
+					}
+				}
+				else if (event.type == SDL_KEYDOWN) {
+					if (event.key.keysym.scancode == SDL_SCANCODE_1) {
+						std::cout << "One" << std::endl;
+						currentActiveMW = 1;
+					}
+					else if (event.key.keysym.scancode == SDL_SCANCODE_2) {
+						currentActiveMW = 2;
+					}
+					else if (event.key.keysym.scancode == SDL_SCANCODE_3) {
+						currentActiveMW = 3;
+					}
+				}
 				ImGui_ImplSDL2_ProcessEvent(&event);
 			}
 
@@ -76,6 +123,9 @@ int main(int argc, char* args[]) {
 
 		// TODO: imgui test
 		window.drawImgui();
+
+		// TODO: grid render
+		window.renderGrid(GRID_WIDTH, GRID_HEIGHT, cameraX, cameraY, ZOOM_LEVEL, grassTexture);
 
 		/*for (Entity& e : entities) {
 			window.render(e);

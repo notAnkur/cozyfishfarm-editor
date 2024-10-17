@@ -22,6 +22,7 @@ public:
 	void setupImGui();
 	void renderTestImGuiText();
 	void drawImgui();
+	void renderGrid(int width, int height, int cameraX, int cameraY, int zoomLevel, SDL_Texture* texture);
 private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
