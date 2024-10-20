@@ -40,11 +40,16 @@ int main(int argc, char* args[]) {
 	// Todo: test grid
 	const int GRID_WIDTH = 10;
 	const int GRID_HEIGHT = 10;
-	int cameraX = 0;
-	int cameraY = 0;
+	float cameraX = 0;
+	float cameraY = 0;
 	int ZOOM_LEVEL = 1;
 	int currentActiveMW = 1; // 1(zoom), 2(cameraX), 3(cameraY)
 	int grid[GRID_WIDTH][GRID_HEIGHT];
+
+	// TODO: pan mouse
+	bool isRightButtonDown = false;
+	int xMousePosInitial, yMousePosInitial = 0;
+	int xMousePosCurr, yMousePosCurr = 0;
 
 
 
@@ -76,10 +81,10 @@ int main(int argc, char* args[]) {
 							ZOOM_LEVEL += 1;
 						}
 						else if (currentActiveMW == 2) {
-							cameraX += 1;
+							//cameraX += 1;
 						}
 						else if (currentActiveMW == 3) {
-							cameraY += 1;
+							//cameraY += 1;
 						}
 					}
 					else {
@@ -89,10 +94,10 @@ int main(int argc, char* args[]) {
 								ZOOM_LEVEL = 1;
 						}
 						else if (currentActiveMW == 2) {
-							cameraX -= 1;
+							//cameraX -= 1;
 						}
 						else if (currentActiveMW == 3) {
-							cameraY -= 1;
+							//cameraY -= 1;
 						}
 					}
 				}
@@ -108,10 +113,33 @@ int main(int argc, char* args[]) {
 						currentActiveMW = 3;
 					}
 				}
+				else if (event.type == SDL_MOUSEBUTTONDOWN) {
+					if (event.button.button == SDL_BUTTON_RIGHT) {
+						std::cout << "right down" << std::endl;
+						if (!isRightButtonDown) {
+							SDL_GetMouseState(&xMousePosInitial, &yMousePosInitial);
+							isRightButtonDown = true;
+						}
+					}
+				}
+				else if (event.type == SDL_MOUSEBUTTONUP) {
+					if (event.button.button == SDL_BUTTON_RIGHT) {
+						std::cout << "right up" << std::endl;
+						isRightButtonDown = false;
+					}
+				}
 				ImGui_ImplSDL2_ProcessEvent(&event);
 			}
 
 			accumulator -= timeStep;
+		}
+
+		// TODO: right mouse hold drag
+		if (isRightButtonDown) {
+			SDL_GetMouseState(&xMousePosCurr, &yMousePosCurr);
+			cameraX += (xMousePosCurr - xMousePosInitial) * 0.001;
+			cameraY += (yMousePosCurr - yMousePosInitial) * 0.001;
+			std::cout << "Current pos delta: " << (xMousePosCurr - xMousePosInitial) << " :: " << (yMousePosCurr - yMousePosInitial) << std::endl;
 		}
 
 		const float alpha = accumulator / timeStep;

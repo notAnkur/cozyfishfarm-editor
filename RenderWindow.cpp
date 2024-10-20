@@ -101,7 +101,7 @@ void RenderWindow::drawImgui()
 	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
 }
 
-void RenderWindow::renderGrid(int width, int height, int cameraX, int cameraY, int zoomLevel, SDL_Texture* texture)
+void RenderWindow::renderGrid(int width, int height, float cameraX, float cameraY, int zoomLevel, SDL_Texture* texture)
 {
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
