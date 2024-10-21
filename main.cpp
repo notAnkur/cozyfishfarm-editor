@@ -137,8 +137,15 @@ int main(int argc, char* args[]) {
 		// TODO: right mouse hold drag
 		if (isRightButtonDown) {
 			SDL_GetMouseState(&xMousePosCurr, &yMousePosCurr);
-			cameraX += (xMousePosCurr - xMousePosInitial) * 0.001;
-			cameraY += (yMousePosCurr - yMousePosInitial) * 0.001;
+			if (std::abs(xMousePosCurr - xMousePosInitial) >= 0.5f)
+				cameraX += (xMousePosCurr - xMousePosInitial) * 0.1;
+
+			if (std::abs(yMousePosCurr - yMousePosInitial) >= 0.5f)
+				cameraY += (yMousePosCurr - yMousePosInitial) * 0.1;
+
+			// set the current position as initial position for next frame
+			xMousePosInitial = xMousePosCurr;
+			yMousePosInitial = yMousePosCurr;
 			std::cout << "Current pos delta: " << (xMousePosCurr - xMousePosInitial) << " :: " << (yMousePosCurr - yMousePosInitial) << std::endl;
 		}
 
