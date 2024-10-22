@@ -3,6 +3,9 @@
 # Visual Studio cache directory
 .vs/
 
+# Imgui config file
+imgui.ini
+
 # Prerequisites
 *.d
 

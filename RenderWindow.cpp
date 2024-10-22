@@ -81,7 +81,7 @@ void RenderWindow::setupImGui()
 	ImGui_ImplSDLRenderer2_Init(renderer);
 }
 
-void RenderWindow::renderTestImGuiText()
+void RenderWindow::renderTestImGuiText(float* zoomLevel, float* cameraPanSpeed, float* posX, float* posY)
 {
 	ImGui_ImplSDLRenderer2_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
@@ -90,6 +90,13 @@ void RenderWindow::renderTestImGuiText()
 	ImGui::Begin("Test");
 
 	ImGui::Text("Hello, world");
+
+	ImGui::SliderFloat("Zoom Slider", zoomLevel, 1.0f, 20.0f);
+	ImGui::SliderFloat("Camera Pan Speed", cameraPanSpeed, 0.0f, 1.0f);
+
+	ImGui::Text("Value 1: %.3f", *posX);
+	
+	ImGui::Text("Value 2: %.3f", *posY);
 
 	ImGui::End();
 
@@ -103,9 +110,11 @@ void RenderWindow::drawImgui()
 
 void RenderWindow::renderGrid(int width, int height, float cameraX, float cameraY, int zoomLevel, SDL_Texture* texture)
 {
+	int cellWidth = 5 * zoomLevel;
+	int cellHeight = 5 * zoomLevel;
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
-			SDL_Rect dstRect = { (i * width - cameraX) * zoomLevel, (j * height - cameraY) * zoomLevel, width * zoomLevel, height * zoomLevel };
+			SDL_Rect dstRect = { (i * cellWidth - cameraX), (j * cellHeight - cameraY), cellWidth, cellHeight };
 			SDL_RenderCopy(renderer, texture, NULL, &dstRect);
 		}
 	}

@@ -42,7 +42,8 @@ int main(int argc, char* args[]) {
 	const int GRID_HEIGHT = 10;
 	float cameraX = 0;
 	float cameraY = 0;
-	int ZOOM_LEVEL = 1;
+	float ZOOM_LEVEL = 1;
+	float cameraPanSpeed = 0.1f;
 	int currentActiveMW = 1; // 1(zoom), 2(cameraX), 3(cameraY)
 	int grid[GRID_WIDTH][GRID_HEIGHT];
 
@@ -137,30 +138,34 @@ int main(int argc, char* args[]) {
 		// TODO: right mouse hold drag
 		if (isRightButtonDown) {
 			SDL_GetMouseState(&xMousePosCurr, &yMousePosCurr);
-			if (std::abs(xMousePosCurr - xMousePosInitial) >= 0.5f)
-				cameraX += (xMousePosCurr - xMousePosInitial) * 0.1;
+			if (std::abs(xMousePosCurr - xMousePosInitial) >= 0.5f) {
+				cameraX += (xMousePosCurr - xMousePosInitial) * cameraPanSpeed;
+			}
 
-			if (std::abs(yMousePosCurr - yMousePosInitial) >= 0.5f)
-				cameraY += (yMousePosCurr - yMousePosInitial) * 0.1;
+			if (std::abs(yMousePosCurr - yMousePosInitial) >= 0.5f) {
+				cameraY += (yMousePosCurr - yMousePosInitial) * cameraPanSpeed;
+			}
 
+			std::cout << "Current pos delta: " << (xMousePosCurr - xMousePosInitial) << " :: " << (yMousePosCurr - yMousePosInitial) << std::endl;
 			// set the current position as initial position for next frame
 			xMousePosInitial = xMousePosCurr;
 			yMousePosInitial = yMousePosCurr;
-			std::cout << "Current pos delta: " << (xMousePosCurr - xMousePosInitial) << " :: " << (yMousePosCurr - yMousePosInitial) << std::endl;
+
+			std::cout << "Cameraxy pos: " << cameraX << " :: " << cameraY << std::endl;
 		}
 
 		const float alpha = accumulator / timeStep;
 
 		// TODO: imgui test
-		window.renderTestImGuiText();
+		window.renderTestImGuiText(&ZOOM_LEVEL, &cameraPanSpeed, &cameraX, &cameraY);
 
 		window.clear();
 
-		// TODO: imgui test
-		window.drawImgui();
-
 		// TODO: grid render
 		window.renderGrid(GRID_WIDTH, GRID_HEIGHT, cameraX, cameraY, ZOOM_LEVEL, grassTexture);
+
+		// TODO: imgui test
+		window.drawImgui();
 
 		/*for (Entity& e : entities) {
 			window.render(e);

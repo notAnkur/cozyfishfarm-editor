@@ -20,7 +20,7 @@ public:
 	void display();
 	// temp
 	void setupImGui();
-	void renderTestImGuiText();
+	void renderTestImGuiText(float* zoomLevel, float* cameraPanSpeed, float* posX, float* posY);
 	void drawImgui();
 	void renderGrid(int width, int height, float cameraX, float cameraY, int zoomLevel, SDL_Texture* texture);
 private:
